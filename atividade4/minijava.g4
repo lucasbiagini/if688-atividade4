@@ -41,11 +41,11 @@ varDecl
     ;
 
 formalList
-    : formal*
+    : (formal (COLON formal)*)?
     ;
 
 formal
-    : type identifier
+    : type SEP+ identifier
     ;
 
 intArrayType
