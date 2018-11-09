@@ -45,7 +45,9 @@ public class MiniJavaParser implements br.ufpe.cin.if688.minijava.atividade4.ant
     @Override
     public ClassDecl visitClassDecl(minijavaParser.ClassDeclContext ctx) {
 
-        if (ctx.getRuleIndex() == 0) {
+        ParseTree ps = ctx.children.get(0);
+
+        if (ps instanceof minijavaParser.ClassDeclSimpleContext) {
             return (ClassDeclSimple) ctx.classDeclSimple().accept(this);
         } else {
             return (ClassDeclExtends) ctx.classDeclExtends().accept(this);
@@ -165,11 +167,14 @@ public class MiniJavaParser implements br.ufpe.cin.if688.minijava.atividade4.ant
 
     @Override
     public Type visitType(minijavaParser.TypeContext ctx) {
-        if (ctx.getRuleIndex() == 0) {
+
+        ParseTree ps = ctx.children.get(0);
+
+        if (ps instanceof minijavaParser.IntegerTypeContext) {
             return (IntegerType) ctx.integerType().accept(this);
-        } else if (ctx.getRuleIndex() == 1){
+        } else if (ps instanceof minijavaParser.BooleanTypeContext){
             return (BooleanType) ctx.booleanType().accept(this);
-        } else if (ctx.getRuleIndex() == 2) {
+        } else if (ps instanceof minijavaParser.IntArrayTypeContext) {
             return (IntArrayType) ctx.intArrayType().accept(this);
         } else {
             return (IdentifierType) ctx.identifierType().accept(this);
