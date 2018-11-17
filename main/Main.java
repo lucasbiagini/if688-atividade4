@@ -17,6 +17,8 @@ import br.ufpe.cin.if688.minijava.ast.Program;
 import br.ufpe.cin.if688.minijava.ast.VarDecl;
 import br.ufpe.cin.if688.minijava.ast.VarDeclList;
 import br.ufpe.cin.if688.minijava.atividade4.MiniJavaParser;
+import br.ufpe.cin.if688.minijava.atividade5.BuildSymbolTableVisitor;
+import br.ufpe.cin.if688.minijava.atividade5.TypeCheckVisitor;
 import br.ufpe.cin.if688.minijava.visitor.PrettyPrintVisitor;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -81,8 +83,11 @@ public class Main {
 		MiniJavaParser mjp = new MiniJavaParser();
 
 		Program prog =  mjp.visitProgram(pc);
-		prog.accept(new PrettyPrintVisitor());
+//		prog.accept(new PrettyPrintVisitor());
 
+		BuildSymbolTableVisitor stVis = new BuildSymbolTableVisitor();
+		prog.accept(stVis);
+		prog.accept(new TypeCheckVisitor(stVis.getSymbolTable()));
 	}
 
 }
