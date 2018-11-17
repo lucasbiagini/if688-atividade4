@@ -75,7 +75,7 @@ public class Main {
 //		PrettyPrintVisitor ppv = new PrettyPrintVisitor();
 //		ppv.visit(p);
 
-		CharStream charstream = CharStreams.fromFileName("/Users/lucasbiagini/Documents/UFPE/2018.2/Compiladores if688/if688.github.io/atividades/04-MiniJavaAST/src/br/ufpe/cin/if688/minijava/atividade4/program.txt");
+		CharStream charstream = CharStreams.fromFileName("/Users/lucasbiagini/Documents/UFPE/2018.2/Compiladores if688/if688.github.io/atividades/04-MiniJavaAST/src/br/ufpe/cin/if688/minijava/main/program.txt");
 		minijavaLexer lexer = new minijavaLexer(charstream);
 		CommonTokenStream cts = new CommonTokenStream(lexer);
 		minijavaParser parser = new minijavaParser(cts);

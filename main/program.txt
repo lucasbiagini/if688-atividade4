@@ -12,7 +12,7 @@ class Main {
     int bbb;
 
     public Boolean isBBBB (int a, int e, int c, string d) {
-        if ((e < 2)) {
+        if ((1 < 2)) {
         } else {
         }
         return False;
