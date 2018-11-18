@@ -34,8 +34,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 		this.currClass = this.symbolTable.getClass(n.i1.s);
 		this.currMethod = this.currClass.getMethod("main");
 
-		n.i1.accept(this);
-		n.i2.accept(this);
 		n.s.accept(this);
 		return null;
 	}
@@ -47,7 +45,7 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 
 		this.currClass = this.symbolTable.getClass(n.i.s);
 		this.currMethod = null;
-		n.i.accept(this);
+
 		for (int i = 0; i < n.vl.size(); i++) {
 			n.vl.elementAt(i).accept(this);
 		}
@@ -65,8 +63,7 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 
 		this.currClass = this.symbolTable.getClass(n.i.s);
 		this.currMethod = null;
-		n.i.accept(this);
-		n.j.accept(this);
+
 		for (int i = 0; i < n.vl.size(); i++) {
 			n.vl.elementAt(i).accept(this);
 		}
@@ -78,11 +75,7 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 
 	// Type t;
 	// Identifier i;
-	public Type visit(VarDecl n) {
-		n.t.accept(this);
-		n.i.accept(this);
-		return null;
-	}
+	public Type visit(VarDecl n) { return null; }
 
 	// Type t;
 	// Identifier i;
@@ -94,8 +87,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 
 		this.currMethod = this.symbolTable.getMethod(n.i.s, this.currClass.getId());
 
-		n.t.accept(this);
-		n.i.accept(this);
 		for (int i = 0; i < n.fl.size(); i++) {
 			n.fl.elementAt(i).accept(this);
 		}
@@ -105,17 +96,19 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 		for (int i = 0; i < n.sl.size(); i++) {
 			n.sl.elementAt(i).accept(this);
 		}
-		n.e.accept(this);
+
+		Type returnType = n.e.accept(this);
+
+		if (!this.symbolTable.compareTypes(this.currMethod.type(), returnType)) {
+			System.out.println("MethodDecl falhou: " +  this.currMethod.getId()+ " esta retornando o tipo errado");
+			System.exit(0);
+		}
 		return null;
 	}
 
 	// Type t;
 	// Identifier i;
-	public Type visit(Formal n) {
-		n.t.accept(this);
-		n.i.accept(this);
-		return null;
-	}
+	public Type visit(Formal n) {return null;}
 
 	public Type visit(IntArrayType n) {
 		return null;
@@ -156,10 +149,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-
-//		n.e.accept(this);
-//		n.s1.accept(this);
-//		n.s2.accept(this);
 		return null;
 	}
 
@@ -176,8 +165,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-//		n.e.accept(this);
-//		n.s.accept(this);
 		return null;
 	}
 
@@ -199,8 +186,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-//		n.i.accept(this);
-//		n.e.accept(this);
 		return null;
 	}
 
@@ -224,10 +209,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-
-//		n.i.accept(this);
-//		n.e1.accept(this);
-//		n.e2.accept(this);
 		return null;
 	}
 
@@ -242,8 +223,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-//		n.e1.accept(this);
-//		n.e2.accept(this);
 		return new BooleanType();
 	}
 
@@ -258,8 +237,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-//		n.e1.accept(this);
-//		n.e2.accept(this);
 		return new BooleanType();
 	}
 
@@ -274,8 +251,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-//		n.e1.accept(this);
-//		n.e2.accept(this);
 		return new IntegerType();
 	}
 
@@ -290,8 +265,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-//		n.e1.accept(this);
-//		n.e2.accept(this);
 		return new IntegerType();
 	}
 
@@ -306,8 +279,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-//		n.e1.accept(this);
-//		n.e2.accept(this);
 		return new IntegerType();
 	}
 
@@ -322,8 +293,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-//		n.e1.accept(this);
-//		n.e2.accept(this);
 		return new IntegerType();
 	}
 
@@ -337,7 +306,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-//		n.e.accept(this);
 		return new IntegerType();
 	}
 
@@ -356,7 +324,7 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 				Type t2 = n.el.elementAt(i).accept(this);
 
 				if (!this.symbolTable.compareTypes(t2, m.getParamAt(i).type())) {
-					System.out.println("Call falhou: " + i + "-ésimo parametro possui tipo errado");
+					System.out.println("Call falhou: " + (i+1) + "º parametro possui tipo errado");
 					System.exit(0);
 				}
 
@@ -383,16 +351,7 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 
 	// String s;
 	public Type visit(IdentifierExp n) {
-
-		if (this.currMethod != null && this.currMethod.containsVar(n.s)) {
-			return this.currMethod.getVar(n.s).type();
-		} else if (this.currMethod != null && this.currMethod.containsParam(n.s)) {
-			return this.currMethod.getParam(n.s).type();
-		} else if (this.currClass.containsVar(n.s)) {
-			return this.currClass.getVar(n.s).type();
-		} else {
-			return new IdentifierType(n.s);
-		}
+		return this.symbolTable.getVarType(this.currMethod, this.currClass, n.s);
 	}
 
 	public Type visit(This n) {
@@ -409,7 +368,6 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-//		n.e.accept(this);
 		return new IntArrayType();
 	}
 
@@ -434,13 +392,11 @@ public class TypeCheckVisitor implements IVisitor<Type> {
 			System.exit(0);
 		}
 
-//		n.e.accept(this);
 		return new BooleanType();
 	}
 
 	// String s;
 	public Type visit(Identifier n) {
-
-		return new IdentifierType(n.s);
+		return this.symbolTable.getVarType(this.currMethod, this.currClass, n.s);
 	}
 }
