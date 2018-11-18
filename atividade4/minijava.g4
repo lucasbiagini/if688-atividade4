@@ -37,7 +37,7 @@ varDeclList
     ;
 
 varDecl
-    : type SEP* identifier SEP* SEMICOLON
+    : type SEP* identifier SEMICOLON
     ;
 
 formalList
@@ -45,7 +45,7 @@ formalList
     ;
 
 formal
-    : type SEP+ identifier
+    : type SEP* identifier
     ;
 
 intArrayType
@@ -109,7 +109,7 @@ block
     ;
 
 if_stm
-    : IF OPENING_PARENTHESIS exp CLOSING_PARENTHESIS statement ELSE statement
+    : IF OPENING_PARENTHESIS exp CLOSING_PARENTHESIS statement ELSE (statement | SEP+ statement)
     ;
 
 while_stm
@@ -149,11 +149,11 @@ times
     ;
 
 arrayLookup
-    : SEP+ exp OPENING_BRACKETS exp CLOSING_BRACKETS
+    : OPENING_PARENTHESIS exp OPENING_BRACKETS exp CLOSING_BRACKETS CLOSING_PARENTHESIS
     ;
 
 arrayLength
-    : SEP+ exp DOT LENGTH
+    : OPENING_PARENTHESIS exp DOT LENGTH CLOSING_PARENTHESIS
     ;
 
 call
