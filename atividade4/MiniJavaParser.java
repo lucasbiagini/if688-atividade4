@@ -405,8 +405,10 @@ public class MiniJavaParser implements br.ufpe.cin.if688.minijava.atividade4.ant
     }
 
     @Override
-    public Object visitNewArray(minijavaParser.NewArrayContext ctx) {
-        return null;
+    public NewArray visitNewArray(minijavaParser.NewArrayContext ctx) {
+        return new NewArray(
+                (Exp) ctx.exp().accept(this)
+        );
     }
 
     @Override
