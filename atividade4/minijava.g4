@@ -181,11 +181,11 @@ this_stm
     ;
 
 newArray
-    : NEW integerType OPENING_BRACKETS exp CLOSING_BRACKETS
+    : NEW SEP+ integerType OPENING_BRACKETS exp CLOSING_BRACKETS
     ;
 
 newObject
-    : NEW identifier OPENING_PARENTHESIS CLOSING_PARENTHESIS
+    : NEW SEP+ identifier OPENING_PARENTHESIS CLOSING_PARENTHESIS
     ;
 
 identifierExp
@@ -245,7 +245,7 @@ LENGTH
     ;
 
 NEW
-    : 'length'
+    : 'new'
     ;
 
 TRUE
