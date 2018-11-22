@@ -86,14 +86,14 @@ statement
     ;
 
 exp
-    : and
-    | lessThan
-    | plus
-    | minus
-    | times
-    | arrayLookup
-    | arrayLength
-    | call
+    : /*and*/ exp AND exp
+    | /*lessThan*/ exp LESSTHAN exp
+    | /*plus*/ exp PLUS exp
+    | /*minus*/ exp MINUS exp
+    | /*times*/ exp TIMES exp
+    | /*arrayLookup*/ exp OPENING_BRACKETS exp CLOSING_BRACKETS
+    | /*arrayLength*/ exp DOT LENGTH
+    | /*call*/ exp DOT identifier OPENING_PARENTHESIS expList CLOSING_PARENTHESIS
     | integerLiteral
     | true_stm
     | false_stm
@@ -102,6 +102,7 @@ exp
     | newArray
     | newObject
     | identifierExp
+    | OPENING_PARENTHESIS exp CLOSING_PARENTHESIS
     ;
 
 block
@@ -128,37 +129,37 @@ arrayAssign
     : identifier OPENING_BRACKETS exp CLOSING_BRACKETS EQUALS exp SEMICOLON
     ;
 
-and
-    : OPENING_PARENTHESIS exp AND exp CLOSING_PARENTHESIS
-    ;
-
-lessThan
-    : OPENING_PARENTHESIS exp LESSTHAN exp CLOSING_PARENTHESIS
-    ;
-
-plus
-    : OPENING_PARENTHESIS exp PLUS exp CLOSING_PARENTHESIS
-    ;
-
-minus
-    : OPENING_PARENTHESIS exp MINUS exp CLOSING_PARENTHESIS
-    ;
-
-times
-    : OPENING_PARENTHESIS exp TIMES exp CLOSING_PARENTHESIS
-    ;
-
-arrayLookup
-    : OPENING_PARENTHESIS exp OPENING_BRACKETS exp CLOSING_BRACKETS CLOSING_PARENTHESIS
-    ;
-
-arrayLength
-    : OPENING_PARENTHESIS exp DOT LENGTH CLOSING_PARENTHESIS
-    ;
-
-call
-    : OPENING_PARENTHESIS exp DOT identifier OPENING_PARENTHESIS expList CLOSING_PARENTHESIS CLOSING_PARENTHESIS
-    ;
+//and
+//    : OPENING_PARENTHESIS exp AND exp CLOSING_PARENTHESIS
+//    ;
+//
+//lessThan
+//    : OPENING_PARENTHESIS exp LESSTHAN exp CLOSING_PARENTHESIS
+//    ;
+//
+//plus
+//    : OPENING_PARENTHESIS exp PLUS exp CLOSING_PARENTHESIS
+//    ;
+//
+//minus
+//    : OPENING_PARENTHESIS exp MINUS exp CLOSING_PARENTHESIS
+//    ;
+//
+//times
+//    : OPENING_PARENTHESIS exp TIMES exp CLOSING_PARENTHESIS
+//    ;
+//
+//arrayLookup
+//    : OPENING_PARENTHESIS exp OPENING_BRACKETS exp CLOSING_BRACKETS CLOSING_PARENTHESIS
+//    ;
+//
+//arrayLength
+//    : OPENING_PARENTHESIS exp DOT LENGTH CLOSING_PARENTHESIS
+//    ;
+//
+//call
+//    : OPENING_PARENTHESIS exp DOT identifier OPENING_PARENTHESIS expList CLOSING_PARENTHESIS CLOSING_PARENTHESIS
+//    ;
 
 expList
     : (exp (COLON exp)*)*

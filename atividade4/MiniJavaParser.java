@@ -2,10 +2,8 @@ package br.ufpe.cin.if688.minijava.atividade4;
 
 import br.ufpe.cin.if688.minijava.ast.*;
 import br.ufpe.cin.if688.minijava.atividade4.antlr.minijavaParser;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.RuleNode;
-import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.runtime.RuleContext;
+import org.antlr.v4.runtime.tree.*;
 
 public class MiniJavaParser implements br.ufpe.cin.if688.minijava.atividade4.antlr.minijavaVisitor {
     @Override
@@ -218,22 +216,83 @@ public class MiniJavaParser implements br.ufpe.cin.if688.minijava.atividade4.ant
 
         ParseTree ps = ctx.children.get(0);
 
-        if (ps instanceof minijavaParser.AndContext) {
-            return (And) ctx.and().accept(this);
-        } else if (ps instanceof minijavaParser.LessThanContext) {
-            return (LessThan) ctx.lessThan().accept(this);
-        } else if (ps instanceof minijavaParser.PlusContext) {
-            return (Plus) ctx.plus().accept(this);
-        } else if (ps instanceof minijavaParser.MinusContext) {
-            return (Minus) ctx.minus().accept(this);
-        } else if (ps instanceof minijavaParser.TimesContext) {
-            return (Times) ctx.times().accept(this);
-        } else if (ps instanceof minijavaParser.ArrayLookupContext) {
-            return (ArrayLookup) ctx.arrayLookup().accept(this);
-        } else if (ps instanceof minijavaParser.ArrayLengthContext) {
-            return (ArrayLength) ctx.arrayLength().accept(this);
-        } else if (ps instanceof minijavaParser.CallContext) {
-            return (Call) ctx.call().accept(this);
+        if (/*ps instanceof minijavaParser.AndContext*/
+            ps instanceof minijavaParser.ExpContext
+                && (ctx.children.get(1) instanceof TerminalNodeImpl)
+                && ((TerminalNodeImpl) ctx.children.get(1)).symbol.getText().equals("&&")
+        ) {
+//            return (And) ctx.and().accept(this);
+            return new And(
+                (Exp) ctx.children.get(0).accept(this),
+                (Exp) ctx.children.get(2).accept(this)
+            );
+        } else if (/*ps instanceof minijavaParser.LessThanContext*/
+                ps instanceof minijavaParser.ExpContext
+                        && ((TerminalNodeImpl) ctx.children.get(1)).symbol.getText().equals("<")
+        ) {
+//            return (LessThan) ctx.lessThan().accept(this);
+            return new LessThan(
+                    (Exp) ctx.children.get(0).accept(this),
+                    (Exp) ctx.children.get(2).accept(this)
+            );
+        } else if (/*ps instanceof minijavaParser.PlusContext*/
+                ps instanceof minijavaParser.ExpContext
+                        && ((TerminalNodeImpl) ctx.children.get(1)).symbol.getText().equals("+")
+        ) {
+//            return (Plus) ctx.plus().accept(this);
+            Plus p = new Plus(
+                    (Exp) ctx.children.get(0).accept(this),
+                    (Exp) ctx.children.get(2).accept(this)
+            );
+            return p;
+        } else if (/*ps instanceof minijavaParser.MinusContext*/
+                ps instanceof minijavaParser.ExpContext
+                        && ((TerminalNodeImpl) ctx.children.get(1)).symbol.getText().equals("-")
+        ) {
+//            return (Minus) ctx.minus().accept(this);
+            return new Minus(
+                    (Exp) ctx.children.get(0).accept(this),
+                    (Exp) ctx.children.get(2).accept(this)
+            );
+        } else if (/*ps instanceof minijavaParser.TimesContext*/
+                ps instanceof minijavaParser.ExpContext
+                        && ((TerminalNodeImpl) ctx.children.get(1)).symbol.getText().equals("*")
+        ) {
+//            return (Times) ctx.times().accept(this);
+            return new Times(
+                    (Exp) ctx.children.get(0).accept(this),
+                    (Exp) ctx.children.get(2).accept(this)
+            );
+        } else if (/*ps instanceof minijavaParser.ArrayLookupContext*/
+                ps instanceof minijavaParser.ExpContext
+                        && ((TerminalNodeImpl) ctx.children.get(1)).symbol.getText().equals("[")
+        ) {
+//            return (ArrayLookup) ctx.arrayLookup().accept(this);
+            ArrayLookup al = new ArrayLookup(
+                    (Exp) ctx.children.get(0).accept(this),
+                    (Exp) ctx.children.get(2).accept(this)
+            );
+            return al;
+        } else if (/*ps instanceof minijavaParser.ArrayLengthContext*/
+                ps instanceof minijavaParser.ExpContext
+                        && ((TerminalNodeImpl) ctx.children.get(1)).symbol.getText().equals(".")
+                        && !(ctx.children.get(2) instanceof minijavaParser.IdentifierContext)
+        ) {
+//            return (ArrayLength) ctx.arrayLength().accept(this);
+            return new ArrayLength(
+                    (Exp) ctx.children.get(0).accept(this)
+            );
+        } else if (/*ps instanceof minijavaParser.CallContext*/
+                ps instanceof minijavaParser.ExpContext
+                        && ((TerminalNodeImpl) ctx.children.get(1)).symbol.getText().equals(".")
+                        && ctx.children.get(2) instanceof minijavaParser.IdentifierContext
+        ) {
+//            return (Call) ctx.call().accept(this);
+            return new Call(
+                    (Exp) ctx.children.get(0).accept(this),
+                    (Identifier) ctx.children.get(2).accept(this),
+                    (ExpList) ctx.children.get(4).accept(this)
+            );
         } else if (ps instanceof minijavaParser.IntegerLiteralContext) {
             return (IntegerLiteral) ctx.integerLiteral().accept(this);
         } else if (ps instanceof minijavaParser.True_stmContext) {
@@ -248,8 +307,10 @@ public class MiniJavaParser implements br.ufpe.cin.if688.minijava.atividade4.ant
             return (NewArray) ctx.newArray().accept(this);
         } else if (ps instanceof minijavaParser.NewObjectContext) {
             return (NewObject) ctx.newObject().accept(this);
-        } else { //if (ps instanceof minijavaParser.IdentifierExpContext) {
+        } else if (ps instanceof minijavaParser.IdentifierExpContext) {
             return (IdentifierExp) ctx.identifierExp().accept(this);
+        } else {
+            return (Exp) ctx.children.get(1).accept(this);
         }
     }
 
@@ -299,69 +360,69 @@ public class MiniJavaParser implements br.ufpe.cin.if688.minijava.atividade4.ant
         );
     }
 
-    @Override
-    public And visitAnd(minijavaParser.AndContext ctx) {
-        return new And(
-                (Exp) ctx.exp(0).accept(this),
-                (Exp) ctx.exp(1).accept(this)
-        );
-    }
-
-    @Override
-    public LessThan visitLessThan(minijavaParser.LessThanContext ctx) {
-        return new LessThan(
-                (Exp) ctx.exp(0).accept(this),
-                (Exp) ctx.exp(1).accept(this)
-        );
-    }
-
-    @Override
-    public Plus visitPlus(minijavaParser.PlusContext ctx) {
-        return new Plus(
-                (Exp) ctx.exp(0).accept(this),
-                (Exp) ctx.exp(1).accept(this)
-        );
-    }
-
-    @Override
-    public Minus visitMinus(minijavaParser.MinusContext ctx) {
-        return new Minus(
-                (Exp) ctx.exp(0).accept(this),
-                (Exp) ctx.exp(1).accept(this)
-        );
-    }
-
-    @Override
-    public Times visitTimes(minijavaParser.TimesContext ctx) {
-        return new Times(
-                (Exp) ctx.exp(0).accept(this),
-                (Exp) ctx.exp(1).accept(this)
-        );
-    }
-
-    @Override
-    public ArrayLookup visitArrayLookup(minijavaParser.ArrayLookupContext ctx) {
-        return new ArrayLookup(
-                (Exp) ctx.exp(0).accept(this),
-                (Exp) ctx.exp(1).accept(this)
-        );
-    }
-
-    @Override
-    public ArrayLength visitArrayLength(minijavaParser.ArrayLengthContext ctx) {
-        return new ArrayLength(
-                (Exp) ctx.exp().accept(this)
-        );
-    }
-
-    @Override
-    public Call visitCall(minijavaParser.CallContext ctx) {
-        return new Call(
-                (Exp) ctx.exp().accept(this),
-                (Identifier) ctx.identifier().accept(this),
-                (ExpList) ctx.expList().accept(this)
-        );
-    }
+//    @Override
+//    public And visitAnd(minijavaParser.AndContext ctx) {
+//        return new And(
+//                (Exp) ctx.exp(0).accept(this),
+//                (Exp) ctx.exp(1).accept(this)
+//        );
+//    }
+//
+//    @Override
+//    public LessThan visitLessThan(minijavaParser.LessThanContext ctx) {
+//        return new LessThan(
+//                (Exp) ctx.exp(0).accept(this),
+//                (Exp) ctx.exp(1).accept(this)
+//        );
+//    }
+//
+//    @Override
+//    public Plus visitPlus(minijavaParser.PlusContext ctx) {
+//        return new Plus(
+//                (Exp) ctx.exp(0).accept(this),
+//                (Exp) ctx.exp(1).accept(this)
+//        );
+//    }
+//
+//    @Override
+//    public Minus visitMinus(minijavaParser.MinusContext ctx) {
+//        return new Minus(
+//                (Exp) ctx.exp(0).accept(this),
+//                (Exp) ctx.exp(1).accept(this)
+//        );
+//    }
+//
+//    @Override
+//    public Times visitTimes(minijavaParser.TimesContext ctx) {
+//        return new Times(
+//                (Exp) ctx.exp(0).accept(this),
+//                (Exp) ctx.exp(1).accept(this)
+//        );
+//    }
+//
+//    @Override
+//    public ArrayLookup visitArrayLookup(minijavaParser.ArrayLookupContext ctx) {
+//        return new ArrayLookup(
+//                (Exp) ctx.exp(0).accept(this),
+//                (Exp) ctx.exp(1).accept(this)
+//        );
+//    }
+//
+//    @Override
+//    public ArrayLength visitArrayLength(minijavaParser.ArrayLengthContext ctx) {
+//        return new ArrayLength(
+//                (Exp) ctx.exp().accept(this)
+//        );
+//    }
+//
+//    @Override
+//    public Call visitCall(minijavaParser.CallContext ctx) {
+//        return new Call(
+//                (Exp) ctx.exp().accept(this),
+//                (Identifier) ctx.identifier().accept(this),
+//                (ExpList) ctx.expList().accept(this)
+//        );
+//    }
 
     @Override
     public ExpList visitExpList(minijavaParser.ExpListContext ctx) {

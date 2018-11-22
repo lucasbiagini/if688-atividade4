@@ -173,54 +173,6 @@ public interface minijavaVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArrayAssign(minijavaParser.ArrayAssignContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link minijavaParser#and}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAnd(minijavaParser.AndContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link minijavaParser#lessThan}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLessThan(minijavaParser.LessThanContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link minijavaParser#plus}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPlus(minijavaParser.PlusContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link minijavaParser#minus}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMinus(minijavaParser.MinusContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link minijavaParser#times}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTimes(minijavaParser.TimesContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link minijavaParser#arrayLookup}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitArrayLookup(minijavaParser.ArrayLookupContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link minijavaParser#arrayLength}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitArrayLength(minijavaParser.ArrayLengthContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link minijavaParser#call}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCall(minijavaParser.CallContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link minijavaParser#expList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

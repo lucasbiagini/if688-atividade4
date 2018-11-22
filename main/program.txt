@@ -1,6 +1,6 @@
 class Main {
     public static Void main(String [] args) {
-        if (((new B().getA()).getStatus())) System.out.println(1);
+        if (new B().getA().getStatus()) System.out.println(1);
         else System.out.println(0);
     }
 }
@@ -42,13 +42,14 @@ class D {
         f = new int[s];
         if (
             true
-        ) a[0] = (a[(s+1)]);
+        ) a[0] = a[s+1];
         else a = a;
 
         f = new int [s];
         f [s] = bbb;
-        b = (f[12]);
-        bbb = (f.length);
+        b = f[12];
+        bbb = f.length;
+        bbb = (new int [10]).length;
 
         return false;
     }
